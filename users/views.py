@@ -41,4 +41,34 @@ def user_signup(request):
 
     return render(request, 'users/signup.html')
 
-# Create your views here.
+def user_login(request):
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None and not user.is_provider:
+            login(request, user)
+            messages.success(request, f'Welcome back, {user.username}!')
+            return redirect('user_dashboard')
+        else:
+            messages.error(request, 'Invalid username or password!')
+
+    return render(request, 'users/login.html')
+
+
+def user_dashboard(request):
+
+    if not request.user.is_authenticated:
+        return redirect('user_login')
+
+    return render(request, 'users/dashboard.html')
+
+def user_logout(request):
+
+    logout(request)
+    messages.success(request, 'Logged out successfully!')
+    return redirect('home')
+
