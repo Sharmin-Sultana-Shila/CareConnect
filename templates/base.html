@@ -90,13 +90,13 @@
                     {% if user.is_authenticated %}
                         {% if user.is_provider %}
                             <li class="nav-item">
-{#                                <a class="nav-link" href="{% url 'provider_dashboard' %}">Dashboard</a>#}
+                                <a class="nav-link" href="{% url 'provider_dashboard' %}">Dashboard</a>
                             </li>
                             <li class="nav-item">
-{#                                <a class="nav-link" href="{% url 'provider_profile' %}">Profile</a>#}
+                                <a class="nav-link" href="{% url 'provider_profile' %}">Profile</a>
                             </li>
                             <li class="nav-item">
-{#                                <a class="nav-link" href="{% url 'provider_logout' %}">Logout</a>#}
+                                <a class="nav-link" href="{% url 'provider_logout' %}">Logout</a>
                             </li>
                         {% else %}
                             <li class="nav-item">
@@ -111,7 +111,7 @@
                             <a class="nav-link" href="{% url 'user_login' %}">User Login</a>
                         </li>
                         <li class="nav-item">
-{#                            <a class="nav-link" href="{% url 'provider_login' %}">Provider Login</a>#}
+                            <a class="nav-link" href="{% url 'provider_login' %}">Provider Login</a>
                         </li>
                     {% endif %}
                 </ul>
