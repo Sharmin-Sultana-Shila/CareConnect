@@ -7,12 +7,10 @@ from .models import User
 
 
 def home(request):
-    """Landing page - choose User or Provider"""
     return render(request, 'home.html')
 
 
 def user_signup(request):
-    """User Signup Page"""
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -21,7 +19,6 @@ def user_signup(request):
         contactNo = request.POST.get('contactNo')
         address = request.POST.get('address')
 
-        # Validation
         if password != password2:
             messages.error(request, 'Passwords do not match!')
             return redirect('user_signup')
@@ -30,7 +27,6 @@ def user_signup(request):
             messages.error(request, 'Username already exists!')
             return redirect('user_signup')
 
-        # Create user
         user = User.objects.create_user(
             username=username,
             email=email,
