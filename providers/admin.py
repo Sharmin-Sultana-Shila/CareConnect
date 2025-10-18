@@ -1,6 +1,9 @@
 from django.contrib import admin
-from . models import ServiceProvider
+from .models import ServiceProvider, Task
 
 admin.site.register(ServiceProvider)
+admin.site.register(Task)
+
+
 
 
