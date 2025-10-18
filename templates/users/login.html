@@ -1,10 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}User Login{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="card shadow-lg" style="max-width: 450px; width: 100%;">
+        <div class="card-body p-5">
+            <h2 class="text-center mb-2">User Login</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control form-control-lg" id="username" name="username" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control form-control-lg" id="password" name="password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 btn-lg">Login</button>
+            </form>
+
+            <p class="text-center mt-4 text-muted">
+                Don't have an account? <a href="" >Sign up here</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
