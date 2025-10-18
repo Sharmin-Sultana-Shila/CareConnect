@@ -16,3 +16,19 @@ class EmergencySOS(models.Model):
 
     class Meta:
         db_table = 'updates_emergencysos'
+
+class Notification(models.Model):
+    providerID = models.ForeignKey(ServiceProvider, on_delete=models.CASCADE, related_name='notifications_sent',
+                                   null=True, blank=True)
+    userID = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications_received')
+    message = models.TextField()
+    time = models.DateTimeField(auto_now_add=True)
+    isRead = models.BooleanField(default=False)
+    notification_type = models.CharField(max_length=50, default='general')
+
+    def str(self):
+        return f"Notification for {self.userID.username}"
+
+    class Meta:
+        ordering = ['-time']
+        db_table = 'updates_notification'
