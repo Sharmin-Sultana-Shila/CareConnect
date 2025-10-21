@@ -1,10 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Search Providers{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="GET" action="{% url 'search_providers' %}">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" name="category">
+                            <option value="">All Categories</option>
+                            <option value="maid" {% if category == 'maid' %}selected{% endif %}>House Maid</option>
+                            <option value="babysitter" {% if category == 'babysitter' %}selected{% endif %}>Babysitter</option>
+                            <option value="caregiver" {% if category == 'caregiver' %}selected{% endif %}>Caregiver</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-control" name="location" value="{{ location }}" placeholder="e.g., Dhaka">
+                    </div>
+                    
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% if providers %}
+            {% for provider in providers %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            {% if provider.profile_image %}
+                            <img src="{{ provider.profile_image.url }}" class="rounded-circle" width="80" height="80" alt="Profile">
+                            {% endif %}
+                        </div>
+                        
+                        <h5 class="card-title text-center">{{ provider.name }}</h5>
+                        <p class="text-center text-muted">{{ provider.get_category_display }}</p>
+                        
+                        <div class="mb-2">
+                            <small><strong><i class="fa-solid fa-location-dot"></i> Location:</strong> {{ provider.location }}</small>
+                        </div>
+                        <div class="mb-3">
+                            <small><strong>Status:</strong></small>
+                            {% if provider.availability %}
+                            <span class="text-muted">Available</span>
+                            {% else %}
+                            <span class="text-muted">Unavailable</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <small><strong>Skills:</strong></small><br>
+                            {% for skill in provider.get_skills_list %}
+                            <span class="badge bg-secondary me-1">{{ skill }}</span>
+                            {% endfor %}
+                        </div>
+                        
+                        <a href="{% url 'provider_detail' provider.id %}" class="btn btn-primary w-100">View Profile</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center py-5">
+                        <h4 class="text-muted">No providers found</h4>
+                        <p>Try adjusting your search criteria</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
