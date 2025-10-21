@@ -74,3 +74,8 @@ def user_profile(request):
         request.user.save()
         return redirect('user_dashboard')
     return render(request, 'users/profile.html')
+    
+def user_logout(request):
+    logout(request)
+    return redirect('home')
+
