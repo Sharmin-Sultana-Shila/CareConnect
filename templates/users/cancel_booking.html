@@ -1,10 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Cancel Booking{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">Cancel Booking?</h2>
+                    
+                    <div class="mb-4">
+                        <h5>Booking Details:</h5>
+                        <p><strong>Provider:</strong> {{ booking.provider.name }}</p>
+                        <p><strong>Date:</strong> {{ booking.dateTime|date:"M d, Y - h:i A" }}</p>
+                        <p><strong>Amount:</strong> {{ booking.totalamount }}</p>
+                        <p><strong>Status:</strong> {{ booking.status }}</p>
+                    </div>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger w-100 btn-lg">Cancel</button>
+                    </form>
+                    
+                    <div class="text-center mt-3">
+                        <a href="{% url 'user_bookings' %}" class="btn btn-outline-secondary">Go Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
