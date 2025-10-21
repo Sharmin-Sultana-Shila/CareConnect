@@ -1,10 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">Edit Profile</h2>
+
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %} >
+                        <div class="text-center mb-4">
+                            {% if user.profile_image %}
+                            <img src="{{ user.profile_image.url }}" class="rounded-circle mb-3" width="120" height="120" alt="Profile">
+                            {% else %}
+                            <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 120px; height: 120px; font-size: 3rem;">
+                                {{ user.username|first|upper }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contactNo" class="form-label">Contact Number</label>
+                            <input type="tel" class="form-control" id="contactNo" name="contactNo" value="{{ user.contactNo }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <textarea class="form-control" id="address" name="address" rows="3" required>{{ user.address }}</textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="profile_image" class="form-label">Change Profile Picture</label>
+                            <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*">
+                        </div>
+
+                        <button type="submit" >Update Profile</button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="{% url 'user_dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
