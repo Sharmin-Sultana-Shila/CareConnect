@@ -20,6 +20,9 @@ from . import views
 urlpatterns = [
     path('login/', views.provider_login, name='provider_login'),
     path('signup/', views.provider_signup, name='provider_signup'),
+    path('logout/', views.provider_logout, name='provider_logout'),
+    path('dashboard/', views.provider_dashboard, name='provider_dashboard'),
+    path('profile/', views.provider_profile, name='provider_profile'),
 
 
 
