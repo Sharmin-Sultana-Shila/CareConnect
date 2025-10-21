@@ -176,7 +176,28 @@ def user_bookings(request):
         'bookings': bookings,
     }
     return render(request, 'users/bookings.html', context)
+    
+@login_required
+def edit_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
 
+    if request.method == 'POST':
+        dateTime_str = request.POST.get('dateTime')
+
+        if dateTime_str:
+            from datetime import datetime
+            try:
+                dateTime = datetime.strptime(dateTime_str, '%Y-%m-%dT%H:%M')
+                booking.dateTime = dateTime
+                booking.save()
+                return redirect('user_bookings')
+            except ValueError:
+                pass
+
+    context = {
+        'booking': booking,
+    }
+    return render(request, 'users/edit_booking.html', context)
 
 
 
