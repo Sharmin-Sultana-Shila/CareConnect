@@ -24,7 +24,7 @@ urlpatterns = [
     path('profile/', views.user_profile, name='user_profile'),
     path('logout/', views.user_logout, name='user_logout'),
     path('search/', views.search_providers, name='search_providers'),
-
+    path('provider/<int:pk>/', views.provider_detail, name='provider_detail'),
 
 
 
