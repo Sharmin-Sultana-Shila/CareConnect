@@ -72,3 +72,54 @@ def provider_signup(request):
         return redirect('provider_login')
 
     return render(request, 'providers/signup.html')
+
+@login_required
+def provider_dashboard(request):
+    if not request.user.is_provider:
+        return redirect('user_dashboard')
+    provider = ServiceProvider.objects.get(user=request.user)
+    total_bookings = Booking.objects.filter(provider=provider).count()
+    completed_tasks = Task.objects.filter(provider=provider, status='completed').count()
+    pending_tasks = Task.objects.filter(provider=provider, status__in=['assigned', 'in_progress']).count()
+
+    context = {
+        'provider': provider,
+        'total_bookings': total_bookings,
+        'completed_tasks': completed_tasks,
+        'pending_tasks': pending_tasks,
+    }
+    return render(request, 'providers/dashboard.html', context)
+
+
+@login_required
+def provider_profile(request):
+    if not request.user.is_provider:
+        return redirect('user_dashboard')
+
+    provider = ServiceProvider.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        provider.name = request.POST.get('name')
+        provider.age = request.POST.get('age')
+        provider.gender = request.POST.get('gender')
+        provider.location = request.POST.get('location')
+        provider.experience_year = request.POST.get('experience_year')
+        provider.skills = request.POST.get('skills')
+        provider.category = request.POST.get('category')
+        provider.hourlyRate = request.POST.get('hourlyRate')
+        provider.availability = request.POST.get('availability') == 'on'
+
+        if request.FILES.get('profile_image'):
+            provider.profile_image = request.FILES.get('profile_image')
+
+        provider.save()
+        return redirect('provider_dashboard')
+
+    context = {'provider': provider}
+    return render(request, 'providers/profile.html', context)
+
+
+def provider_logout(request):
+
+    logout(request)
+    return redirect('home')
