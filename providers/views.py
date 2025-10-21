@@ -123,3 +123,23 @@ def provider_logout(request):
 
     logout(request)
     return redirect('home')
+
+# provider er bookings gula
+@login_required
+def provider_bookings(request):
+    if not request.user.is_provider:
+        return redirect('user_dashboard')
+    provider = ServiceProvider.objects.get(user=request.user)
+    bookings = Booking.objects.filter(provider=provider).order_by('-created_at')
+    context = {
+        'provider': provider,
+        'bookings': bookings,
+    }
+    return render(request, 'providers/bookings.html', context)
+
+
+
+
+
+
+
