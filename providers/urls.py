@@ -29,5 +29,5 @@ urlpatterns = [
     path('notifications/', views.provider_notifications, name='provider_notifications'),
     path('emergency/', views.send_emergency, name='send_emergency'),
     path('booking/accept/<int:booking_id>/', views.accept_booking, name='accept_booking'),
-
+    path('booking/reject/<int:booking_id>/', views.reject_booking, name='reject_booking'),
 ]
