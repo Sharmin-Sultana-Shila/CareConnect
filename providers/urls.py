@@ -23,7 +23,7 @@ urlpatterns = [
     path('logout/', views.provider_logout, name='provider_logout'),
     path('dashboard/', views.provider_dashboard, name='provider_dashboard'),
     path('profile/', views.provider_profile, name='provider_profile'),
-
+    path('bookings/', views.provider_bookings, name='provider_bookings'),
 
 
 
