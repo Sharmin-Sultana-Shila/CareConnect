@@ -88,23 +88,23 @@
                     {% if user.is_authenticated %}
                         {% if user.is_provider %}
                             <li class="nav-item">
-
+                                <a class="nav-link" href="{% url 'provider_dashboard' %}">Dashboard</a>
                             </li>
                             <li class="nav-item">
-
+                                <a class="nav-link" href="{% url 'provider_profile' %}">Profile</a>
                             </li>
                             <li class="nav-item">
-
+                                <a class="nav-link" href="{% url 'provider_logout' %}">Logout</a>
                             </li>
                         {% else %}
                             <li class="nav-item">
-
+                                <a class="nav-link" href="{% url 'user_dashboard' %}">Dashboard</a>
                             </li>
                             <li class="nav-item">
-
+                                <a class="nav-link" href="{% url 'user_profile' %}">Profile</a>
                             </li>
                             <li class="nav-item">
-
+                                <a class="nav-link" href="{% url 'user_logout' %}">Logout</a>
                             </li>
                         {% endif %}
                     {% else %}
