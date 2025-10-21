@@ -27,7 +27,7 @@ urlpatterns = [
     path('tasks/', views.provider_tasks, name='provider_tasks'),
     path('task/complete/<int:task_id>/', views.complete_task, name='complete_task'),
     path('notifications/', views.provider_notifications, name='provider_notifications'),
-    
+    path('emergency/', views.send_emergency, name='send_emergency'),
 
 
 ]
