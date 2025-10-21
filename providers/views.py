@@ -197,5 +197,40 @@ def provider_notifications(request):
     return render(request, 'providers/notifications.html', context)
 
 
+# emergency feature
+@login_required
+def send_emergency(request):
+    if not request.user.is_provider:
+        return redirect('user_dashboard')
+    provider = ServiceProvider.objects.get(user=request.user)
+
+    # provider jader kaj korse tader unique id gula nicche
+    user_ids = Booking.objects.filter(provider=provider).values_list('user_id', flat=True).distinct()
+    users = User.objects.filter(id__in=user_ids)
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id')
+        location = request.POST.get('location')
+        description = request.POST.get('description')
+        user = User.objects.get(id=user_id)
+        EmergencySOS.objects.create(
+            provider=provider,
+            user=user,
+            location=location,
+            description=description
+        )
+        Notification.objects.create(
+            providerID=provider,
+            userID=user,
+
+            notification_type='emergency'
+        )
+        return redirect('provider_dashboard')
+
+    context = {
+        'provider': provider,
+        'users': users,
+    }
+    return render(request, 'providers/emergency.html', context)
+
 
 
