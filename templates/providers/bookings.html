@@ -1,10 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    
+    {% if bookings %}
+        <div class="row g-4">
+            {% for booking in bookings %}
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h5>Booking #{{ booking.id }}</h5>
+                            {% if booking.status == 'pending' %}
+                            <span class="btn btn-outline-primary btn-sm">Pending</span>
+                            {% elif booking.status == 'confirmed' %}
+                            <span class="btn btn-outline-primary btn-sm">Confirmed</span>
+                            {% elif booking.status == 'completed' %}
+                            <span class="btn btn-outline-primary btn-sm">Completed</span>
+                            {% else %}
+                            <span class="btn btn-outline-primary btn-sm">Cancelled</span>
+                            {% endif %}
+                        </div>
+                        
+                        <p><strong>Client:</strong> {{ booking.user.username }}</p>
+                        <p><strong>Contact:</strong> {{ booking.user.contactNo }}</p>
+                        <p><strong>Date:</strong> {{ booking.dateTime|date:"M d, Y - h:i A" }}</p>
+                        <p><strong>Amount:</strong> {{ booking.totalamount }}</p>
+                        
+                        <div class="mb-3">
+                            <strong>Tasks:</strong>
+                            {% for task in booking.booking_tasks.all %}
+                            <div class="ms-3">
+                                {% if task.status == 'completed' %}
+                                <span class="text-success">✓</span>
+                                {% else %}
+                                <span class="text-muted">○</span>
+                                {% endif %}
+                                {{ task.description }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if booking.status == 'pending' %}
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'accept_booking' booking.id %}" class="btn btn-outline-primary btn-sm">Accept</a>
+                            <a href="{% url 'reject_booking' booking.id %}" class="btn text-muted btn-sm">Reject</a>
+                        </div>
+                        {% endif %}
+
+
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <h4 class="text-muted">No bookings yet</h4>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
