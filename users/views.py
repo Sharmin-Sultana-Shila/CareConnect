@@ -162,7 +162,20 @@ def book_provider(request, pk):
     }
     return render(request, 'users/book_provider.html', context)
 
+@login_required
+def delete_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    booking.booking_tasks.all().delete()
+    booking.delete()
+    return redirect('user_bookings')
 
+@login_required
+def user_bookings(request):
+    bookings = Booking.objects.filter(user=request.user).order_by('-created_at')
+    context = {
+        'bookings': bookings,
+    }
+    return render(request, 'users/bookings.html', context)
 
 
 
