@@ -79,3 +79,37 @@ def user_logout(request):
     logout(request)
     return redirect('home')
 
+# provider ke search kortese
+
+@login_required
+def search_providers(request):
+    category = request.GET.get('category', '')
+    location = request.GET.get('location', '')
+
+    providers = ServiceProvider.objects.all()
+
+    # category onushare filter
+    if category:
+        providers = providers.filter(category=category)
+
+    # location onushare filter
+    if location:
+        providers = providers.filter(location__icontains=location)
+
+    context = {
+        'providers': providers,
+        'category': category,
+        'location': location,
+    }
+    return render(request, 'users/search.html', context)
+
+
+
+
+
+
+
+
+
+
+
