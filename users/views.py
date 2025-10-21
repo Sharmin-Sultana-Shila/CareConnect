@@ -50,3 +50,27 @@ def user_signup(request):
         return redirect('user_login')
 
     return render(request, 'users/signup.html')
+
+
+@login_required
+def user_dashboard(request):
+    if request.user.is_provider:
+        return redirect('provider_dashboard')
+    return render(request, 'users/dashboard.html')
+
+
+@login_required
+def user_profile(request):
+    if request.user.is_provider:
+        return redirect('provider_dashboard')
+    if request.method == 'POST':
+        request.user.username = request.POST.get('username')
+        request.user.email = request.POST.get('email')
+        request.user.contactNo = request.POST.get('contactNo')
+        request.user.address = request.POST.get('address')
+
+        if request.FILES.get('profile_image'):
+            request.user.profile_image = request.FILES.get('profile_image')
+        request.user.save()
+        return redirect('user_dashboard')
+    return render(request, 'users/profile.html')
