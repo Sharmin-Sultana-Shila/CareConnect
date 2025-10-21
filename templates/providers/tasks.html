@@ -1,10 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}My Tasks{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    
+    {% if tasks %}
+        <div class="row g-4">
+            {% for task in tasks %}
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h5>Task #{{ task.id }}</h5>
+                            {% if task.status == 'assigned' %}
+                            <span class="btn btn-outline-primary btn-sm">Assigned</span>
+                            {% elif task.status == 'in_progress' %}
+                            <span class="btn btn-outline-primary btn-sm">In Progress</span>
+                            {% else %}
+                            <span class="btn btn-outline-primary btn-sm">Completed</span>
+                            {% endif %}
+                        </div>
+                        
+                        <p><strong>Description:</strong> {{ task.description }}</p>
+                        <p><strong>Client:</strong> {{ task.user.username }}</p>
+                        <p><strong>Created:</strong> {{ task.created_at|date:"M d, Y" }}</p>
+                        
+                        {% if task.completedAt %}
+                        <p><strong>Completed:</strong> {{ task.completedAt|date:"M d, Y - h:i A" }}</p>
+                        {% endif %}
+                        
+                        {% if task.status != 'completed' %}
+                        <a href="{% url 'complete_task' task.id %}" class="btn btn-outline-primary btn-sm">Mark Complete</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <h4 class="text-muted">No tasks yet</h4>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
