@@ -1,10 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Emergency Alerts{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    {% if alerts %}
+        <div class="row g-4">
+            {% for alert in alerts %}
+            <div class="col-md-6">
+                <div class="card shadow-sm {% if not alert.is_resolved %}border-danger{% endif %}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h5 class="">Emergency #{{ alert.id }}</h5>
+                        </div
+                        <p><strong>Provider:</strong> {{ alert.provider.name }}</p>
+                        <p><strong>Location:</strong> {{ alert.location }}</p>
+                        <p><strong>Description:</strong> <strong>{{ alert.description }} </strong></p>
+                        <p><strong>Time:</strong> {{ alert.time|date:"M d, Y - h:i A" }}</p>
+                        <p><strong>Contact:</strong> {{ alert.provider.contactNo }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <h4 class="text-muted">No emergency alerts</h4>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
