@@ -28,6 +28,6 @@ urlpatterns = [
     path('task/complete/<int:task_id>/', views.complete_task, name='complete_task'),
     path('notifications/', views.provider_notifications, name='provider_notifications'),
     path('emergency/', views.send_emergency, name='send_emergency'),
-
+    path('booking/accept/<int:booking_id>/', views.accept_booking, name='accept_booking'),
 
 ]
