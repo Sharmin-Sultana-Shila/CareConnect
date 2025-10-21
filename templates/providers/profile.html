@@ -1,10 +1,102 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">Edit Provider Profile</h2>
+
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="text-center mb-4">
+                            {% if provider.profile_image %}
+                            <img src="{{ provider.profile_image.url }}" class="rounded-circle mb-3" width="120" height="120" alt="Profile">
+
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" name="name" value="{{ provider.name }}" >
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Age</label>
+                                    <input type="number" class="form-control" name="age" value="{{ provider.age }}">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Gender</label>
+                                    <select class="form-select" name="gender" required>
+                                        <option value="male" {% if provider.gender == "male" %}selected{% endif %}>Male</option>
+                                        <option value="female" {% if provider.gender == "female" %}selected{% endif %}>Female</option>
+                                        <option value="other" {% if provider.gender == "other" %}selected{% endif %}>Other</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Location</label>
+                                    <input type="text" class="form-control" name="location" value="{{ provider.location }}" >
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Category</label>
+                                    <select class="form-select" name="category" required>
+                                        <option value="maid" {% if provider.category == 'maid' %}selected{% endif %}>House Maid</option>
+                                        <option value="babysitter" {% if provider.category == 'babysitter' %}selected{% endif %}>Babysitter</option>
+                                        <option value="caregiver" {% if provider.category == 'caregiver' %}selected{% endif %}>Caregiver</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Experience (years)</label>
+                                    <input type="number" class="form-control" name="experience_year" value="{{ provider.experience_year }}" step="0.5" >
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Hourly Rate (BDT)</label>
+                                    <input type="number" class="form-control" name="hourlyRate" value="{{ provider.hourlyRate }}" >
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Skills (comma-separated)</label>
+                                    <textarea class="form-control" name="skills" rows="3" required>{{ provider.skills }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Change Profile Picture</label>
+                            <input type="file" class="form-control" name="profile_image" accept="image/*">
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="availability" id="availability" {% if provider.availability %}checked{% endif %}>
+                                <label class="form-check-label" for="availability">
+                                    Available for work
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" >Update Profile</button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="{% url 'provider_dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
