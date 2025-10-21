@@ -218,7 +218,29 @@ def cancel_booking(request, booking_id):
     }
     return render(request, 'users/cancel_booking.html', context)
 
+@login_required
+def user_notifications(request):
+    if request.user.is_provider:
+        return redirect('provider_dashboard')
+    notifications = Notification.objects.filter(userID=request.user).order_by('-time')
+    notifications.update(isRead=True)
 
+    context = {
+        'notifications': notifications,
+    }
+    return render(request, 'users/notifications.html', context)
+
+
+@login_required
+def emergency_alerts(request):
+    if request.user.is_provider:
+        return redirect('provider_dashboard')
+    alerts = EmergencySOS.objects.filter(user=request.user).order_by('-time')
+
+    context = {
+        'alerts': alerts,
+    }
+    return render(request, 'users/emergency_alerts.html', context)
 
 
 
