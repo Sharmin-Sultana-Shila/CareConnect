@@ -32,7 +32,8 @@ urlpatterns = [
     path('booking/cancel/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),
     path('notifications/', views.user_notifications, name='user_notifications'),
     path('emergency/', views.emergency_alerts, name='emergency_alerts'),
-
+    path('feedback/<int:booking_id>/', views.add_feedback, name='add_feedback'),
+    path('provider/<int:provider_id>/review/', views.add_provider_review, name='add_provider_review'),
 
 
 ]
