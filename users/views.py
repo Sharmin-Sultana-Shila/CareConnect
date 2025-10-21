@@ -120,6 +120,47 @@ def provider_detail(request, pk):
     }
     return render(request, 'users/provider_detail.html', context)
 
+# provider ke book korbe
+@login_required
+def book_provider(request, pk):
+
+    provider = ServiceProvider.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        dateTime_str = request.POST.get('dateTime')
+        selected_tasks = request.POST.getlist('tasks')
+        dateTime = datetime.strptime(dateTime_str, '%Y-%m-%dT%H:%M')
+
+        totalamount = len(selected_tasks) * provider.hourlyRate
+        booking = Booking.objects.create(
+            user=request.user,
+            provider=provider,
+            dateTime=dateTime,
+            totalamount=totalamount,
+            status='pending'
+        )
+
+        for task_desc in selected_tasks:
+            Task.objects.create(
+                provider=provider,
+                user=request.user,
+                booking=booking,
+                description=task_desc,
+                status='assigned'
+            )
+
+        Notification.objects.create(
+            providerID=provider,
+            userID=provider.user,
+            message=f"New booking from {request.user.username} for {dateTime.strftime('%Y-%m-%d %H:%M')}",
+            notification_type='booking'
+        )
+        return redirect('user_bookings')
+
+    context = {
+        'provider': provider,
+    }
+    return render(request, 'users/book_provider.html', context)
 
 
 
