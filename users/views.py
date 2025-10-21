@@ -199,6 +199,24 @@ def edit_booking(request, booking_id):
     }
     return render(request, 'users/edit_booking.html', context)
 
+@login_required
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    if request.method == 'POST':
+        booking.status = 'cancelled'
+        booking.save()
+        Notification.objects.create(
+            providerID=booking.provider,
+            userID=booking.provider.user,
+            message=f"{request.user.username} cancelled booking #{booking.id}",
+            notification_type='cancellation'
+        )
+        return redirect('user_bookings')
+
+    context = {
+        'booking': booking,
+    }
+    return render(request, 'users/cancel_booking.html', context)
 
 
 
