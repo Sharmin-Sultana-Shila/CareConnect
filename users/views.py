@@ -270,6 +270,56 @@ def add_feedback(request, booking_id):
         'booking': booking,
     }
     return render(request, 'users/add_feedback.html', context)
+@login_required
+def add_provider_review(request, provider_id):
+    if request.user.is_provider:
+        return redirect('provider_dashboard')
+    provider = get_object_or_404(ServiceProvider, id=provider_id)
+    has_booking = Booking.objects.filter(
+        user=request.user,
+        provider=provider,
+        status='completed'
+    ).exists()
+
+    if not has_booking:
+        return redirect('provider_detail', pk=provider_id)
+
+    # agei review korse kina
+    existing_review = Feedback.objects.filter(
+        booking__user=request.user,
+        booking__provider=provider
+    ).first()
+    if existing_review:
+        return redirect('provider_detail', pk=provider_id)
+    if request.method == 'POST':
+        comment = request.POST.get('comment')
+        # booking complete holei review dibe
+        booking = Booking.objects.filter(
+            user=request.user,
+            provider=provider,
+            status='completed'
+        ).first()
+
+        if booking and not hasattr(booking, 'booking_feedback'):
+            Feedback.objects.create(
+                booking=booking,
+                comment=comment
+            )
+            Notification.objects.create(
+                providerID=provider,
+                userID=provider.user,
+                message=f"{request.user.username} reviewed you",
+                notification_type='review'
+            )
+            return redirect('provider_detail', pk=provider_id)
+        else:
+            return redirect('provider_detail', pk=provider_id)
+
+    context = {
+        'provider': provider,
+    }
+    return render(request, 'users/add_provider_review.html', context)
+
 
 
 
