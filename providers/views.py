@@ -252,5 +252,24 @@ def accept_booking(request, booking_id):
     else:
         pass
     return redirect('provider_bookings')
+@login_required
+def reject_booking(request, booking_id):
+    if not request.user.is_provider:
+        return redirect('user_dashboard')
+    provider = ServiceProvider.objects.get(user=request.user)
+    booking = get_object_or_404(Booking, id=booking_id, provider=provider)
 
+    if booking.status == 'pending':
+        booking.status = 'cancelled'
+        booking.save()
+        Notification.objects.create(
+            providerID=provider,
+            userID=booking.user,
+            message=f"{provider.name} rejected your booking #{booking.id}",
+            notification_type='booking_rejected'
+        )
+    else:
+        pass
+
+    return redirect('provider_bookings')
 
