@@ -242,6 +242,34 @@ def emergency_alerts(request):
     }
     return render(request, 'users/emergency_alerts.html', context)
 
+@login_required
+def add_feedback(request, booking_id):
+    # booking = Booking.objects.get(id=booking_id) dei nai karon je kew amr booking access korte parbe
+    # tai security purpose e amr booking jate ami access korte pari, onno kew korte gele 404 error dibe
+
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+
+    if request.method == 'POST':
+        comment = request.POST.get('comment')
+
+        Feedback.objects.create(
+            booking=booking,
+            comment=comment
+        )
+
+
+        Notification.objects.create(
+            providerID=booking.provider,
+            userID=booking.provider.user,
+            message=f"{request.user.username} left a review",
+            notification_type='review'
+        )
+        return redirect('user_bookings')
+
+    context = {
+        'booking': booking,
+    }
+    return render(request, 'users/add_feedback.html', context)
 
 
 
