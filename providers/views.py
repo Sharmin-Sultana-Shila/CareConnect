@@ -182,7 +182,19 @@ def complete_task(request, task_id):
         'task': task,
     }
     return render(request, 'providers/complete_task.html', context)
+@login_required
+def provider_notifications(request):
+    if not request.user.is_provider:
+        return redirect('user_dashboard')
+    provider = ServiceProvider.objects.get(user=request.user)
+    notifications = Notification.objects.filter(userID=request.user).order_by('-time')
+    notifications.update(isRead=True)
 
+    context = {
+        'provider': provider,
+        'notifications': notifications,
+    }
+    return render(request, 'providers/notifications.html', context)
 
 
 
