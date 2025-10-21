@@ -103,6 +103,23 @@ def search_providers(request):
     }
     return render(request, 'users/search.html', context)
 
+@login_required
+def provider_detail(request, pk):
+    provider = ServiceProvider.objects.get(pk=pk)
+    # booking__provider = booked provider db theke ami jake khujtesi tar shathe match koro
+    # order_by= amon vabe sort koro jeno
+    # -created_at = minus(-) bolte decensing order
+    # [:5] = prothom 5 ta slice
+    # orthat most recent 5 ta feedback dekhaw
+    feedbacks = Feedback.objects.filter(booking__provider=provider).order_by('-created_at')[:5]
+
+    # rating calculation hoitese
+    context = {
+        'provider': provider,
+        'feedbacks': feedbacks,
+    }
+    return render(request, 'users/provider_detail.html', context)
+
 
 
 
