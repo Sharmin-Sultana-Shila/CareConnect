@@ -137,6 +137,19 @@ def provider_bookings(request):
     }
     return render(request, 'providers/bookings.html', context)
 
+# provider er task gula
+@login_required
+def provider_tasks(request):
+    if not request.user.is_provider:
+        return redirect('user_dashboard')
+    provider = ServiceProvider.objects.get(user=request.user)
+    tasks = Task.objects.filter(provider=provider).order_by('-created_at')
+    context = {
+        'provider': provider,
+        'tasks': tasks,
+    }
+    return render(request, 'providers/tasks.html', context)
+
 
 
 
