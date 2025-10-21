@@ -1,10 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Provider Dashboard {% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    {% if provider.profile_image %}
+                    <img src="{{ provider.profile_image.url }}" class="rounded-circle mb-3" width="150" height="150" alt="Profile">
+                    {% endif %}
+                    
+                    <h3>{{ provider.name }}</h3>
+                    <p class="text-muted">{{ provider.get_category_display }}</p>
+                    
+                    <div class="text-start mt-4">
+                        <p><strong><i class="fa-solid fa-location-dot"></i>Location:</strong> {{ provider.location }}</p>
+                        <p><strong><i class="fa-solid fa-phone"></i> Contact:</strong> {{ provider.contactNo }}</p>
+                        <p><strong><i class="fa-solid fa-dollar-sign"></i> Rate:</strong> {{ provider.hourlyRate }}/hour</p>
+                        <p><strong><i class="fa-solid fa-calendar-days"></i> Experience:</strong> {{ provider.experience_year }} years</p>
+                        <p>
+                            <strong>Status:</strong> 
+                            {% if provider.availability %}
+                            <span class="text-muted"><i class="fa-solid fa-check"></i> Available</span>
+                            {% else %}
+                            <span class="text-muted"><i class="fa-solid fa-xmark"></i> Unavailable</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="card text-white">
+                        <div class="card-body text-center">
+                            <h3 class="mb-0" style="color: black;">{{ total_bookings }}</h3>
+                            <p class="mb-0" style="color: black;">Total Bookings</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white">
+                        <div class="card-body text-center">
+                            <h3 class="mb-0" style="color: black;">{{ completed_tasks }}</h3>
+                            <p class="mb-0" style="color: black;">Completed Tasks</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white">
+                        <div class="card-body text-center">
+                            <h3 class="mb-0" style="color: black;">{{ pending_tasks }}</h3>
+                            <p class="mb-0" style="color: black;">Pending Tasks</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h4 class="mb-3">Skills</h4>
+                    <div>
+                        {% for skill in provider.get_skills_list %}
+                        <span class="badge bg-secondary me-2 mb-2">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="mb-3">Quick Actions</h4>
+                    <div class="list-group">
+                        <a href="{% url 'provider_bookings' %}" class="list-group-item list-group-item-action"><i class="fa-solid fa-table-list"></i> View My Bookings</a>
+                        <a href="{% url 'provider_tasks' %}" class="list-group-item list-group-item-action"><i class="fa-solid fa-circle-check"></i> Mark Tasks Complete</a>
+                        <a href="{% url 'provider_notifications' %}" class="list-group-item list-group-item-action"><i class="fa-solid fa-bell"></i> Check Notifications</a>
+                        <a href="{% url 'send_emergency' %}" class="list-group-item list-group-item-action"><i class="fa-solid fa-hospital-user"></i> Send Emergency SOS</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
