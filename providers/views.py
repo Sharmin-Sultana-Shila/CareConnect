@@ -150,7 +150,38 @@ def provider_tasks(request):
     }
     return render(request, 'providers/tasks.html', context)
 
+@login_required
+def complete_task(request, task_id):
+    if not request.user.is_provider:
+        return redirect('user_dashboard')
+    provider = ServiceProvider.objects.get(user=request.user)
+    task = get_object_or_404(Task, id=task_id, provider=provider)
 
+    if request.method == 'POST':
+        task.status = 'completed'
+        task.completedAt = timezone.now()
+        task.save()
+        if task.booking:
+            booking = task.booking
+            all_tasks = booking.booking_tasks.all()
+            all_completed = all(t.status == 'completed' for t in all_tasks)
+            # jodi shobgula task complete hoye jay tkhn  status completed
+            if all_completed:
+                booking.status = 'completed'
+                booking.save()
+        Notification.objects.create(
+            providerID=provider,
+            userID=task.user,
+            message=f"{provider.name} completed task: {task.description}",
+            notification_type='task_completion'
+        )
+        return redirect('provider_tasks')
+
+    context = {
+        'provider': provider,
+        'task': task,
+    }
+    return render(request, 'providers/complete_task.html', context)
 
 
 
