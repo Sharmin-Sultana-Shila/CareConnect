@@ -232,5 +232,25 @@ def send_emergency(request):
     }
     return render(request, 'providers/emergency.html', context)
 
+@login_required
+def accept_booking(request, booking_id):
+    if not request.user.is_provider:
+        return redirect('user_dashboard')
+    provider = ServiceProvider.objects.get(user=request.user)
+    booking = get_object_or_404(Booking, id=booking_id, provider=provider)
+
+    if booking.status == 'pending':
+        booking.status = 'confirmed'
+        booking.save()
+
+        Notification.objects.create(
+            providerID=provider,
+            userID=booking.user,
+            message=f"{provider.name} accepted your booking #{booking.id}",
+            notification_type='booking_accepted'
+        )
+    else:
+        pass
+    return redirect('provider_bookings')
 
 
