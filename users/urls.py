@@ -26,10 +26,12 @@ urlpatterns = [
     path('search/', views.search_providers, name='search_providers'),
     path('provider/<int:pk>/', views.provider_detail, name='provider_detail'),
     path('book/<int:pk>/', views.book_provider, name='book_provider'),
-
-
-
-
+    path('bookings/', views.user_bookings, name='user_bookings'),
+    path('booking/delete/<int:booking_id>/', views.delete_booking, name='delete_booking'),
+    path('booking/edit/<int:booking_id>/', views.edit_booking, name='edit_booking'),
+    path('booking/cancel/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),
+    path('notifications/', views.user_notifications, name='user_notifications'),
+    path('emergency/', views.emergency_alerts, name='emergency_alerts'),
 
 
 

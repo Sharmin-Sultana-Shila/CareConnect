@@ -162,11 +162,85 @@ def book_provider(request, pk):
     }
     return render(request, 'users/book_provider.html', context)
 
+@login_required
+def delete_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    booking.booking_tasks.all().delete()
+    booking.delete()
+    return redirect('user_bookings')
+
+@login_required
+def user_bookings(request):
+    bookings = Booking.objects.filter(user=request.user).order_by('-created_at')
+    context = {
+        'bookings': bookings,
+    }
+    return render(request, 'users/bookings.html', context)
+    
+@login_required
+def edit_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+
+    if request.method == 'POST':
+        dateTime_str = request.POST.get('dateTime')
+
+        if dateTime_str:
+            from datetime import datetime
+            try:
+                dateTime = datetime.strptime(dateTime_str, '%Y-%m-%dT%H:%M')
+                booking.dateTime = dateTime
+                booking.save()
+                return redirect('user_bookings')
+            except ValueError:
+                pass
+
+    context = {
+        'booking': booking,
+    }
+    return render(request, 'users/edit_booking.html', context)
+
+@login_required
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    if request.method == 'POST':
+        booking.status = 'cancelled'
+        booking.save()
+        Notification.objects.create(
+            providerID=booking.provider,
+            userID=booking.provider.user,
+            message=f"{request.user.username} cancelled booking #{booking.id}",
+            notification_type='cancellation'
+        )
+        return redirect('user_bookings')
+
+    context = {
+        'booking': booking,
+    }
+    return render(request, 'users/cancel_booking.html', context)
+
+@login_required
+def user_notifications(request):
+    if request.user.is_provider:
+        return redirect('provider_dashboard')
+    notifications = Notification.objects.filter(userID=request.user).order_by('-time')
+    notifications.update(isRead=True)
+
+    context = {
+        'notifications': notifications,
+    }
+    return render(request, 'users/notifications.html', context)
 
 
+@login_required
+def emergency_alerts(request):
+    if request.user.is_provider:
+        return redirect('provider_dashboard')
+    alerts = EmergencySOS.objects.filter(user=request.user).order_by('-time')
 
-
-
+    context = {
+        'alerts': alerts,
+    }
+    return render(request, 'users/emergency_alerts.html', context)
 
 
 

@@ -26,7 +26,7 @@ urlpatterns = [
     path('bookings/', views.provider_bookings, name='provider_bookings'),
     path('tasks/', views.provider_tasks, name='provider_tasks'),
     path('task/complete/<int:task_id>/', views.complete_task, name='complete_task'),
-
+    path('notifications/', views.provider_notifications, name='provider_notifications'),
     
 
 
