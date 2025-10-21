@@ -24,7 +24,7 @@ urlpatterns = [
     path('dashboard/', views.provider_dashboard, name='provider_dashboard'),
     path('profile/', views.provider_profile, name='provider_profile'),
     path('bookings/', views.provider_bookings, name='provider_bookings'),
-
+    path('tasks/', views.provider_tasks, name='provider_tasks'),
 
 
 ]
