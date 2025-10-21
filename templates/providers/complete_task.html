@@ -1,10 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Complete Task{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">Mark Task Complete</h2>
+                    
+                    <div class="mb-4">
+                        <h5>Task Details:</h5>
+                        <p><strong>Task:</strong> {{ task.description }}</p>
+                        <p><strong>Client:</strong> {{ task.user.username }}</p>
+                        <p><strong>Status:</strong> <span class="btn btn-outline-primary btn-sm">{{ task.status }}</span></p>
+                    </div>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success w-100 btn-lg">Mark as Completed</button>
+                    </form>
+                    
+                    <div class="text-center mt-3">
+                        <a href="{% url 'provider_tasks' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
