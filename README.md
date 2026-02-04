@@ -1,0 +1,2 @@
+CareConnect 
+A Django-based marketplace connecting homeowners with professional home service providers (housemaids, babysitters, and caregivers).
